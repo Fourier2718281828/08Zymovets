@@ -1,8 +1,11 @@
 #pragma once
-#include <ostream>
+#include <iostream>
 #include <string>
+using std::cout;
+using std::endl;
 using std::ostream;
 using std::string;
+
 //************************************************************
 //Визначити і реалізувати узагальнений клас масивів довільного 
 //розміру і довільного типу Array<n,T>, передбачивши вкладений
@@ -21,12 +24,12 @@ public:
 	class BadArray;
 	Array();
 	~Array();
-	inline Elem& operator[](const size_t index);
-	inline const Elem& operator[](const size_t index) const;
+	inline const Elem& operator[](const size_t) const;
+	inline		 Elem& operator[](const size_t);
 	inline size_t size() const; 
 private:
-	static size_t freeId;
-	const size_t _id;
+	/*static size_t freeId;
+	const size_t _id;*/
 	const size_t _size;
 	Elem *const _allocator;
 	//bool operator==(const Array&) const;
@@ -38,18 +41,21 @@ template<size_t Size, typename Elem>
 class Array<Size, Elem>::BadArray
 {
 private:
-	string _reason;
-	size_t _index;
+	const string _reason;
+	const size_t _index;
 public:
 	BadArray(const size_t index, const string& reason = "unknown") 
 		: _reason(reason), _index(index) { return; }
-	~BadArray() { return; }
-	inline void print_reason() const { return; }
+	~BadArray()							 { return; }
+	inline void print_reason() const	 
+	{
+		cout << _reason << ':' << _index << endl;
+	}
 };
 
 template<size_t Size, typename Elem>
 inline Array<Size, Elem>::Array()
-	: _id(++freeId), _size(Size), _allocator(new Elem[Size])
+	: /*_id(++freeId),*/ _size(Size), _allocator(new Elem[Size])
 {
 	return;
 }
@@ -61,19 +67,34 @@ inline Array<Size, Elem>::~Array()
 }
 
 template<size_t Size, typename Elem>
-inline Elem& Array<Size, Elem>::operator[](const size_t index)
+inline Elem& Array<Size, Elem>::operator[](const size_t i)
 {
-	// // O: insert return statement here
+	if (i >= size())
+		throw BadArray(i, "Index out of acceptable bounds");
+	return _allocator[i];
 }
 
 template<size_t Size, typename Elem>
-inline const Elem& Array<Size, Elem>::operator[](const size_t index) const
+inline const Elem& Array<Size, Elem>::operator[](const size_t i) const
 {
-	// // O: insert return statement here
+	if (i >= size())
+		throw BadArray(i, "Index out of acceptable bounds");
+	return _allocator[i];
 }
 
 template<size_t Size, typename Elem>
 inline size_t Array<Size, Elem>::size() const
 {
 	return _size;
+}
+
+template<size_t Size, typename Elem>
+inline ostream& operator<<(ostream& o, const Array<Size,Elem>& arr)
+{
+	cout << '[';
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		cout << arr[i] << ((i == arr.size() - 1) ? "" : " ");
+	}
+	return o << ']';
 }
