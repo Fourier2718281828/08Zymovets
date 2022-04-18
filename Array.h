@@ -23,19 +23,29 @@ class Array
 public:
 	class BadArray;
 	Array();
+	Array(const Array&)			   = delete;
+	Array& operator=(const Array&) = delete;
 	~Array();
+	inline		 size_t getId()					const;
+	inline		 size_t size ()					const;
 	inline const Elem& operator[](const size_t) const;
 	inline		 Elem& operator[](const size_t);
-	inline size_t size() const; 
 private:
-	/*static size_t freeId;
-	const size_t _id;*/
-	const size_t _size;
-	Elem *const _allocator;
-	//bool operator==(const Array&) const;
-	Array(const Array&) = delete;
-	Array& operator=(const Array&) = delete;
+	static size_t freeId;
+	const  size_t _id;
+	const  size_t _size;
+	Elem _allocator[Size];
 };
+
+//Partial specifications for Array to 
+//avoid arrays of type : Array<0, ...> and  Array<..., Elem&>
+//-----------------------------------------------------------
+template<size_t Size, typename Elem>
+class Array<Size, Elem&>;
+
+template<typename Elem>
+class Array<0, Elem>;
+//-----------------------------------------------------------
 
 template<size_t Size, typename Elem>
 class Array<Size, Elem>::BadArray
@@ -54,16 +64,25 @@ public:
 };
 
 template<size_t Size, typename Elem>
+size_t Array<Size, Elem>::freeId = 0;
+
+template<size_t Size, typename Elem>
 inline Array<Size, Elem>::Array()
-	: /*_id(++freeId),*/ _size(Size), _allocator(new Elem[Size])
+	: _id(++freeId), _size(Size)
 {
+#ifndef NDEBUG
+	cout << "--Array<" << size() << ", " << typeid(Elem).name() << "> (id" << getId() << ") created." << endl;
+#endif // !NDEBUG
+
 	return;
 }
 
 template<size_t Size, typename Elem>
-inline Array<Size, Elem>::~Array()
+inline Array<Size, Elem>::~Array() 
 {
-	delete[] _allocator;
+#ifndef NDEBUG
+	cout << "--Array<" << size() << ", " << typeid(Elem).name() << "> (id" << getId() << ") deleted." << endl;
+#endif // !NDEBUG
 }
 
 template<size_t Size, typename Elem>
@@ -80,6 +99,12 @@ inline const Elem& Array<Size, Elem>::operator[](const size_t i) const
 	if (i >= size())
 		throw BadArray(i, "Index out of acceptable bounds");
 	return _allocator[i];
+}
+
+template<size_t Size, typename Elem>
+inline size_t Array<Size, Elem>::getId() const
+{
+	return _id;
 }
 
 template<size_t Size, typename Elem>
