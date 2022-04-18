@@ -38,14 +38,18 @@ private:
 };
 
 //Partial specifications for Array to 
-//avoid arrays of type : Array<0, ...> and  Array<..., Elem&>
-//-----------------------------------------------------------
+//avoid arrays of type : 
+// Array<0, ...> and  Array<..., Elem&>, Array<..., const Elem>
+//-------------------------------------------------------------
+template<size_t Size, typename Elem>
+class Array<Size, const Elem>;
+
 template<size_t Size, typename Elem>
 class Array<Size, Elem&>;
 
 template<typename Elem>
 class Array<0, Elem>;
-//-----------------------------------------------------------
+//-------------------------------------------------------------
 
 template<size_t Size, typename Elem>
 class Array<Size, Elem>::BadArray
