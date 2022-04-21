@@ -1,10 +1,8 @@
-#include <iostream>
 #include "Array.h"
 #include "complex.h"
-#include <array>
+#include <iostream>
 using std::cout;
 using std::endl;
-using std::string;
 
 //************************************************************
 //Визначити і реалізувати узагальнений клас масивів довільного 
@@ -17,17 +15,17 @@ using std::string;
 //Version 1.0
 //************************************************************
 
-
 int main(void)
 {
-	array<double, 3> es;
 	{
 		cout << "#1 Plain Old Data array--------------------------------" << endl;
 		cout << "Creating array :" << endl;
 		Array<5, double> a;
-		//Array<0, double> c;
-		//Array<10, double&> f;
-		cout << "Notice that we cannot create zero-sized arrays or arrays of references." << endl;
+		//Array<0, double> foo;
+		//Array<10, double&> foo;
+		//Array<10, const double> foo;
+		//Array<10, const double&> f;
+		cout << "Notice that we cannot create zero-sized arrays, arrays of consts or arrays of references." << endl;
 		cout << "Created array : " << endl << a << endl;
 		cout << "Size = " << a.size() << endl;
 		a[0] = a[1] = a[2] = 1;

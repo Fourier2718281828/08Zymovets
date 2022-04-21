@@ -33,7 +33,6 @@ public:
 private:
 	static size_t freeId;
 	const  size_t _id;
-	const  size_t _size;
 	Elem _allocator[Size];
 };
 
@@ -58,7 +57,7 @@ private:
 	const string _reason;
 	const size_t _index;
 public:
-	BadArray(const size_t index, const string& reason = "unknown") 
+	BadArray(const size_t index, const string& reason) 
 		: _reason(reason), _index(index) { return; }
 	~BadArray()							 { return; }
 	inline void print_reason() const	 
@@ -72,7 +71,7 @@ size_t Array<Size, Elem>::freeId = 0;
 
 template<size_t Size, typename Elem>
 inline Array<Size, Elem>::Array()
-	: _id(++freeId), _size(Size)
+	: _id(++freeId)
 {
 #ifndef NDEBUG
 	cout << "--Array<" << size() << ", " << typeid(Elem).name() << "> (id" << getId() << ") created." << endl;
@@ -114,7 +113,7 @@ inline size_t Array<Size, Elem>::getId() const
 template<size_t Size, typename Elem>
 inline size_t Array<Size, Elem>::size() const
 {
-	return _size;
+	return Size;
 }
 
 template<size_t Size, typename Elem>

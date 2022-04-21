@@ -41,4 +41,3 @@ bool operator!= (const Complex& a, const Complex& b)
 {
 	return !(a == b);
 }
-
